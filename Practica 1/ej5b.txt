@@ -8,7 +8,7 @@ ORG 3000H
 CALC:
 MOV BX, SP
 ADD BX, 6
-MOV DL, BYTE PTR [BX] ;mover a DL el contenido de la direccion que almacena BX
+MOV DL, BYTE PTR [BX] ;con byte ptr especifico que quiero traer un byte nada mas. en este caso es redundante porque estoy escribiendo en un registro de un byte
 SUB BX, 2
 MOV AH, BYTE PTR [BX]
 SUB BX, 2

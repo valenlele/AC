@@ -1,0 +1,46 @@
+ORG 1000H
+A DW 8
+B DW 5
+C DW 4
+D DB ?
+
+ORG 3000H
+CALC:
+MOV BX, SP
+ADD BX, 6
+
+MOV DX, [BX] ;muevo direccion de memoria del primer valor a dx
+MOV CX, BX   ;guardo el sp en ax 
+MOV BX, DX   ;muevo la direccion de memoria del valor en bx para el direccionamiento indirecto
+MOV DX, [BX] ;muevo el valor en la direccion de memoria en bx a dx
+MOV BX, CX   ;devuelvo el sp a bx
+SUB BX, 2    ;sumo dos al sp
+
+MOV AX, [BX]
+MOV CX, BX
+MOV BX, AX
+MOV AX, [BX]
+MOV BX, CX
+SUB BX, 2
+
+MOV CX, [BX]
+ADD DL, AL
+MOV AX, BX
+MOV BX, CX
+SUB DX, [BX] 
+RET
+
+ORG 2000H
+MOV AX, OFFSET A
+PUSH AX
+MOV AX, OFFSET B
+PUSH AX
+MOV AX, OFFSET C
+PUSH AX
+CALL CALC
+MOV D, DL
+POP AX
+POP AX
+POP AX
+HLT
+END
