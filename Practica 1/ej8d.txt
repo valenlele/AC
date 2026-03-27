@@ -1,9 +1,9 @@
 org 1000h
-car db "U"
-res db ?
+CADENA DB "oRGAnizacion", 00h
+CANT DB ?
 
 org 3000h
-ES_MAYUS: cmp ah, dh
+es_mayus: cmp ah, dh
 js false
 
 cmp dl, ah
@@ -18,7 +18,7 @@ fin: ret
 
 ES_VOCAL: mov dh, 'A'
 mov dl, 'Z'
-call ES_MAYUS
+call es_mayus
 
 cmp dh, 0FFh ;verifica si es mayus
 jnz validar ;si no da 0, es minus. no hace falta el pasaje
@@ -47,11 +47,30 @@ true2: mov ah, 0FFh
 
 fin2: ret
 
+CONTAR_VOC: MOV CH, 0
+LOOP: MOV AH, [BX]
+CMP AH, 00h
+JZ FIN3
+
+PUSH DX
+CALL ES_VOCAL
+POP DX
+CMP AH, 0FFh
+JNZ LOOP2
+INC CH
+
+LOOP2: INC BX
+JMP LOOP
+
+FIN3: RET
+
 org 2000h
-mov ah, car
-push dx
-call ES_VOCAL
-pop dx
-mov res, ah
+mov BX, offset cadena
+PUSH AX
+PUSH CX
+CALL CONTAR_VOC
+POP AX
+POP CX
+MOV CANT, CH
 hlt
 end
