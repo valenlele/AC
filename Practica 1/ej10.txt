@@ -3,7 +3,32 @@ D1 DW 1234h
 D2 DW 5678h
 
 ORG 3000H
-SWAP: 
+SWAP: PUSH AX
+PUSH BX
+PUSH CX
+PUSH DX
+
+MOV BX, SP
+ADD BX, 12
+
+MOV DX, [BX] ;DX me queda con la direccion de memoria del primer dato
+SUB BX, 2
+MOV BX, [BX]
+
+MOV CX, [BX]
+MOV AX, BX
+MOV BX, DX
+MOV DX, [BX]
+
+MOV [BX], CX
+MOV BX, AX
+MOV [BX], DX
+
+POP DX
+POP CX
+POP BX
+POP AX
+
 RET
 
 ORG 2000H
