@@ -1,0 +1,21 @@
+PA EQU 30h ;llaves, dispositivo de entrada
+CA EQU 32h 
+
+ORG 1000H
+MSJ DB "Apagadas"
+
+ORG 2000H
+MOV AL, 0FFh 
+OUT CA, AL ;CA tiene que estar todo en 1 porque las llaves son dispositivos de entrada
+IN AL, PA ;leo el estado de las llaves y lo paso a AL
+CMP AL, 0 ;verifico si estan todas bajas
+JNZ FIN ;si no lo estan, termina el programa
+MOV AL, 8
+MOV BX, OFFSET MSJ
+INT 7 ;imprime en pantalla. recibe por AL la longitud de la cadena y por BX la direccion de memoria donde empieza la cadena
+
+FIN: INT 0
+
+END
+
+;el programa verifica si las llaves estan apagadas o prendidas. si estan todas apagadas imprime "Apagadas" en pantalla. si por lo menos una esta prendida, no hace nada

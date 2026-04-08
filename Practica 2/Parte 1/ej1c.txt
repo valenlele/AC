@@ -1,0 +1,17 @@
+PA EQU 30h
+PB EQU 31h
+CA EQU 32h
+CB EQU 33h
+
+ORG 2000H
+MOV AL, 0FFh
+OUT CA, AL
+MOV AL, 00h
+OUT CB, AL
+
+IN AL, PA
+OUT PB, AL
+INT 0
+END
+
+;el programa guarda en AL los estados de las llaves y luego mueve esos estados a los estados de las luces

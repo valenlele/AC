@@ -1,0 +1,12 @@
+PB EQU 31h ;luces, dispositivo de salida
+CB EQU 33h
+
+ORG 2000H
+MOV AL, 00h
+OUT CB, AL
+MOV AL, 0Fh
+OUT PB, AL
+INT 0 ;termina la ejecucion del programa, equivalente a hlt
+END
+
+;el programa enciende las ultimas (o primeras) 4 luces

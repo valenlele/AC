@@ -1,0 +1,25 @@
+PA EQU 30h
+CA EQU 32h
+
+ORG 1000H
+MSJ1 DB "Llave prendida"
+MSJ2 DB "LLave apagada"
+
+ORG 2000H
+
+MOV AL, 0FFh
+OUT CA, AL
+
+IN AL, PA
+;verificar estodo AL
+
+MOV AL, 14
+MOV BX, OFFSET MSJ1
+INT 7
+
+MOV AL, 13
+MOV BX, OFFSET MSJ2
+INT 7
+
+INT 0
+END
