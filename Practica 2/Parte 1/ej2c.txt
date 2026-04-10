@@ -1,0 +1,18 @@
+PA EQU 30h
+PB EQU 31h
+CA EQU 32h
+CB EQU 33h
+
+ORG 2000H
+
+MOV AL, 0FFh
+OUT CA, AL
+
+MOV AL, 00h
+OUT CB, AL
+
+LOOP: IN AL, PA ;guardo en AL el estado de las llaves
+OUT PB, AL
+JMP LOOP
+
+END
