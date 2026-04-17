@@ -1,0 +1,21 @@
+PA EQU 30h ;PA guarda en sus dos ultimos bits los valores de strobe y busy
+CA EQU 32h
+
+ORG 1000H
+LIBRE DB "Libre"
+
+ORG 2000H
+; 0FDH = 1111 1101
+MOV AL, 0FDh ;configuramos AL para que strobe sea de salida y busy de entrada 
+OUT CA, AL
+
+POLL: IN AL, PA ;llegan a AL los valores de strobe y busy
+AND AL, 00000001b
+JNZ POLL
+
+MOV BX, OFFSET LIBRE
+MOV AL, 5
+INT 7
+
+INT 0
+END
