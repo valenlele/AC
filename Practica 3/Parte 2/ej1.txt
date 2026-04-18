@@ -2,26 +2,29 @@ EOI EQU 20H
 IMR EQU 21H
 INT0 EQU 24H
 
-N_F10 EQU 15
+N_F10 EQU 15 ; ID de la interrupcion. valor por el que tengo que hacer x4 para que me lleve al lugar del vector de interrupciones donde esta almacenada la direccion de memeoria donde esta el gestor de la interrupcion
 
-ORG 1000H
-IP_F10 DW RUT_F10 ; ??
+ORG 60
+IP_F10 DW RUT_F10 ; direccion del vector de direcciones donde almacenamos la direccion donde esta el gestor de interrupciones
 
 ORG 2000H
 CLI ; inhabilita las interrupciones
+
 MOV AL, 0FEH ; OFEH = 1111 1110
 OUT IMR, AL ; habilita el F10
+
 MOV AL, N_F10
 OUT INT0, AL
+
 MOV DX, 0
 STI ; habilita las interrupciones
 LAZO: JMP LAZO
 
 ORG 3000H
 RUT_F10: PUSH AX
-;---------
+INC DX
 MOV AL, EOI
-;----------
+OUT EOI, AL
 POP AX
 IRET
 
