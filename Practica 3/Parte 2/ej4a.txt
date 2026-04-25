@@ -1,5 +1,6 @@
 ;Escribir un programa que muestre en pantalla “Vamos las interrupciones!” 
 ;cada vez que se presiona la tecla F10. El programa nunca termina
+PIC EQU 20H
 EOI EQU 20H
 IMR EQU 21H
 INT0 EQU 24H
@@ -10,7 +11,7 @@ IP_F10 DW RUT_F10
 
 ORG 1000H
 STR DB "Vamos las interrupciones!"
-FIN DW ?
+FIN DB ?
 
 ORG 2000H
 CLI
@@ -28,7 +29,7 @@ MOV AL, OFFSET FIN - OFFSET STR
 MOV BX, OFFSET STR
 INT 7
 MOV AL, EOI
-OUT EOI, AL
+OUT PIC, AL
 POP BX
 POP AX
 IRET
