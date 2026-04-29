@@ -1,0 +1,51 @@
+PIC EQU 20H
+EOI EQU 20H
+IMR EQU 21H
+INT2 EQU 26H
+DATO EQU 40H
+ESTADO EQU 41H
+
+ORG 16
+DIR_HANDSHAKE DW RUT_HANDSHAKE
+
+ORG 1000H
+ID_HANDSHAKE DB 4
+STR DB "Empanadas"
+
+ORG 2000H
+CLI
+
+MOV AL, 11111011B
+OUT IMR, AL
+
+MOV AL, ID_HANDSHAKE
+OUT INT2, AL
+
+IN AL, ESTADO
+OR AL, 80H ; modificamos el registro de estado activando las interrupciones sin modificar el resto
+OUT ESTADO, AL
+
+MOV BX, OFFSET STR
+MOV CL, 9 ;hago esto adentro del CLI porque al segundo que salga del STI se va a ejecutar la inerreupcion. si lo pongo afuera no se van a llegar a guardar los datos en BX y CL
+
+STI
+
+LOOP: CMP CL, 0
+JNZ LOOP
+INT 0
+
+ORG 3000H
+RUT_HANDSHAKE: MOV AL, [BX]
+OUT DATO, AL
+INC BX
+DEC CL
+JNZ FIN
+
+MOV AL, 0FFH
+OUT IMR, AL ;desactivo interrupciones 
+
+FIN: MOV AL, EOI
+OUT PIC, AL
+IRET
+
+END
