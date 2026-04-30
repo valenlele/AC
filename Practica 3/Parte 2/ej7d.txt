@@ -1,0 +1,93 @@
+;a) Escribir un programa que imprime “UNIVERSIDAD NACIONAL DE LA PLATA” en la 
+;impresora a través del HAND-SHAKE. El envío de los caracteres se realiza por 
+;interrupciones emitidas desde el HAND-SHAKE cada vez que detecta que la 
+;impresora se desocupa.
+
+;c) Modificar a) de modo que el string a imprimir se lea desde teclado. El 
+;string a leer tiene una longitud fija de 10 caracteres, y se lee de forma
+;completa antes de comenzar la impresión. Tener en cuenta entonces que las 
+;interrupciones deben esperar a que se ingrese todo el string.
+
+;d) Modificar c) de modo que cuando se presione F10 se cancele la impresión. En tal
+;caso, deben desactivarse las interrupciones del HANDSHAKE para evitar que se 
+;envíen más caracteres a imprimir.
+
+
+PIC EQU 20H
+EOI EQU 20H
+IMR EQU 21H
+INT0 EQU 24H
+INT2 EQU 26H
+DATO EQU 40H
+ESTADO EQU 41H
+
+ORG 16
+DIR_HANDSHAKE DW RUT_HANDSHAKE
+
+ORG 40
+DIR_F10 DW RUT_F10
+
+ORG 1000H
+ID_HANDSHAKE DB 4
+ID_F10 DB 10
+LONG DB 5
+STR DB ?
+
+ORG 2000H
+CLI
+
+MOV AL, 11111010B
+OUT IMR, AL
+
+MOV AL, ID_HANDSHAKE
+OUT INT2, AL
+
+MOV AL, ID_F10
+OUT INT0, AL
+
+IN AL, ESTADO
+OR AL, 10000000B
+OUT ESTADO, AL
+
+MOV AL, 1
+MOV BX, OFFSET STR
+MOV CL, LONG
+LEER_STR: INT 6
+INC BX
+DEC CL
+JNZ LEER_STR
+
+MOV BX, OFFSET STR
+MOV CL, LONG
+
+STI
+
+LOOP: CMP CL, 0
+JNZ LOOP
+
+INT 0
+
+ORG 3000H
+RUT_HANDSHAKE: MOV AL, [BX]
+OUT DATO, AL
+INC BX
+DEC CL
+JNZ FIN_RUT
+
+MOV AL, 0FFH
+OUT IMR, AL
+
+FIN_RUT: MOV AL, EOI
+OUT PIC, AL
+IRET
+
+ORG 3100H
+RUT_F10: IN AL, ESTADO
+XOR AL, 10000000B
+OUT ESTADO, AL
+
+MOV AL, EOI
+OUT PIC, AL
+IRET
+
+END

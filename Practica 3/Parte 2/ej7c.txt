@@ -1,0 +1,70 @@
+;a) Escribir un programa que imprime “UNIVERSIDAD NACIONAL DE LA PLATA” en la 
+;impresora a través del HAND-SHAKE. El envío de los caracteres se realiza por 
+;interrupciones emitidas desde el HAND-SHAKE cada vez que detecta que la 
+;impresora se desocupa.
+
+;Modificar a) de modo que el string a imprimir se lea desde teclado. El string 
+;a leer tiene una longitud fija de 10 caracteres, y se lee de forma completa 
+;antes de comenzar la impresión. Tener en cuenta entonces que las 
+;interrupciones deben esperar a que se ingrese todo el string.
+
+PIC EQU 20H
+EOI EQU 20H
+IMR EQU 21H
+INT2 EQU 26H
+DATO EQU 40H
+ESTADO EQU 41H
+
+ORG 16
+DIR_HANDSHAKE DW RUT_HANDSHAKE
+
+ORG 1000H
+ID_HANDSHAKE DB 4
+STR DB ?
+
+ORG 2000H
+CLI
+
+MOV AL, 11111011B
+OUT IMR, AL
+
+MOV AL, ID_HANDSHAKE
+OUT INT2, AL
+
+IN AL, ESTADO
+OR AL, 10000000B
+OUT ESTADO, AL
+
+MOV AL, 1
+MOV BX, OFFSET STR
+MOV CL, 10
+LEER_STR: INT 6
+INC BX
+DEC CL
+JNZ LEER_STR
+
+SUB BX, 10
+MOV CL, 10
+
+STI
+
+LOOP: CMP CL, 0
+JNZ LOOP
+
+INT 0
+
+ORG 3000H
+RUT_HANDSHAKE: MOV AL, [BX]
+OUT DATO, AL
+INC BX
+DEC CL
+JNZ FIN_RUT
+
+MOV AL, 0FFH
+OUT IMR, AL
+
+FIN_RUT: MOV AL, EOI
+OUT PIC, AL
+IRET
+
+END
