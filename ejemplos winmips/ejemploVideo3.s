@@ -1,0 +1,23 @@
+; declarar variables A y B
+; calcular el maximo entre los dos y guardar el resultado en la variable C
+
+.data
+  A: .word 4
+  B: .word 10
+  C: .word 0
+
+.code
+  ld r1, A(r0)
+  ld r2, B(r0)
+  
+  slt r3, r1, r2 ; si r2 > r1 (B > A), r3 = 1
+  bnez r3, B_mayor
+
+  sd r1, C(r0)
+  j fin
+
+  B_mayor:
+    sd r2, C(r0)
+
+  fin:
+    halt
