@@ -4,8 +4,8 @@ altura: .double 1.76
 IMC:    .double 0.00
 estado: .word 0
 valor1: .double 18.5
-valor2: .double 25
-valor3: .double 30
+valor2: .double 25.0
+valor3: .double 30.0
 
 .code
 l.d f1, peso(r0)
@@ -17,6 +17,7 @@ l.d f6, valor3(r0)
 
 mul.d f2, f2, f2
 div.d f3, f1, f2
+s.d f3, IMC(r0)
 
 c.lt.d f3, f4 ; si IMC es < que 18.5, FP = 1
 bc1t infrapeso
