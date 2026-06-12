@@ -1,9 +1,9 @@
 .data
-coorX: .byte 0          ; coordenada X de un punto
-coorY: .byte 0          ; coordenada Y de un punto
-color: .byte 0, 0, 0, 0 ; color: máximo rojo + máximo azul => magenta
+coorX:   .byte 0          ; coordenada X de un punto
+coorY:   .byte 0          ; coordenada Y de un punto
+color:   .byte 0, 0, 0, 0 ; color: máximo rojo + máximo azul => magenta
 CONTROL: .word32 0x10000
-DATA: .word32 0x10008
+DATA:    .word32 0x10008
 
 .text
 lwu $s6, CONTROL(r0) ; $s6 = dirección de CONTROL
